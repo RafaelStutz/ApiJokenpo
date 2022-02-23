@@ -48,12 +48,14 @@ module.exports = app => {
         if (jogadorVenceu) {
 
             const jogador = await Jogadores.jogadorExiste(nomeUsuario)
+            console.log(jogador)
+            if (jogador == false) {
+                await Jogadores.adicionaJogador(nomeUsuario)
+            }
             const vitorias = await Jogadores.buscaVitorias(nomeUsuario)
             console.log(vitorias, 'vitorias')
-            if (jogador == null) {
-                Jogadores.adicionaJogador(nomeUsuario)
-            }
             const resultados = vitorias[0].vitorias + 1
+            console.log(resultados)
             await Jogadores.atualizaVitorias(nomeUsuario, resultados)
 
         } else {
@@ -69,45 +71,22 @@ module.exports = app => {
         const mensagemJogada = resultadoJogada(escolhaUsuario, escolhaComputador)
 
         res.send(mensagemJogada)
-        //verificar se o jogador venceu
-
-
-        //resultado da jogada
-
-        // const escolhajogador = jogador.escolha
-        // const escolhaComputador = computador().then(jogadaPC => {
-        //     return jogadaPC 
-        // })
-        // const resultado = resultadoJogada(escolhajogador, escolhaComputador)
-
-        // const jogadorVenceu = verificaSeJogadorVenceu(escolhajogador, escolhaComputador)
-        // let contador = 0
-        // if (jogadorVenceu === true) {
-        //     contador = 1
-        // }
-
-        // //verificar se jogador já existe
-        // const nomedosjogadores = `SELECT nome FROM jokenpofinal`
-        // const existeJogador = nomedosjogadores.some(n => n.nome === jogador.nome)
-        // if (existeJogador === true) {
-
-        //     Jogadores.atualizaVitorias(jogador.vitorias = jogador.vitorias + 1)
-        // } else {
-        //     //adiciona se jogador ainda não existe na lista
-        //     Jogadores.adicionaJogador(jogador,res)
-        //     // calcular opcao do computador XXXXXXXXX
-
-        //     // comparar as jogadas xxxxxxxxxxx
-
-        //     // verificar quem venceu xxxxxxxxx
-
-        //     // adicionada jogada do jogador
-
-        //     // adicionar vitoria ao jogdor
-
-        // }
+        
     })
 
+    //ranking
+    app.get('/ranking', async (req,res) => {
+        const ranking = await Jogadores.ranking()
+        res.send(ranking)
+        console.log(ranking)
+    })
+
+    //deletar jogador
+    app.delete('/jogador/:id', (req,res) => {
+        const id = parseInt(req.params.id)
+
+        Jogadores.deleta(id, res)
+    })
 
     async function ProcessarJogo() {
         const jogadas = await Escolhas.listarEscolhas()
