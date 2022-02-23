@@ -19,7 +19,6 @@ Ferramentas utilizadas na construção do projeto:
 git clone https://github.com/RafaelStutz/ApiJokenpo
 
 # Acesse a pasta do projeto no terminal
-cd ApiJokenpo
 
 # Instale as dependências
 npm install 
